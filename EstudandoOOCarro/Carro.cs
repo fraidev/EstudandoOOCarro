@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace EstudandoOOCarro
 {
-    public interface IAutomovel
-    {
-        Direcao Direcao { get; }
-        void VirarParaDireita();
-        void VirarParaEsquerda();
-    }
+    //Interface
 
     public class Carro : IAutomovel
     {
-        public Carro()
+        private readonly IBarraDirecao _barraDirecao;
+
+        //Construtor
+        public Carro(IBarraDirecao barraDirecao)
         {
+            _barraDirecao = barraDirecao;
             LeftOrRight = 0;
         }
 
+        //Declaracao
         public Direcao Direcao
         {
             get
@@ -40,64 +40,24 @@ namespace EstudandoOOCarro
 
         private int LeftOrRight { get; set; }
 
+        //Metodo
         public void VirarParaDireita()
         {
-            LeftOrRight++;
+            if (_barraDirecao.Estado == Estado.Funcionando)
+            {
+                _barraDirecao.Usar();
+                LeftOrRight++;
+            }
         }
 
         public void VirarParaEsquerda()
         {
-            LeftOrRight--;
-        }
-
-    }
-
-    public class BarraDirecao
-    {
-        private readonly int _maxUso;
-
-        public BarraDirecao(int maxUso)
-        {
-            _maxUso = maxUso;
-        }
-        
-        public Estado Estado
-        {
-            get
+            if (_barraDirecao.Estado == Estado.Funcionando)
             {
-                if (CountUso < _maxUso)
-                {
-                    return Estado.Funcionando;
-                }
-                else
-                {
-                    return Estado.Quebrado;
-                }
+                _barraDirecao.Usar();
+                LeftOrRight--;
             }
         }
 
-        
-        private int CountUso;
-
-        public void Usar()
-        {
-            CountUso++;
-        }
-    
-
-
-    }
-
-    public enum Estado
-    {
-        Funcionando,
-        Quebrado
-    }
-
-    public enum Direcao
-    {
-        Frente,
-        Esquerda,
-        Direita
     }
 }
